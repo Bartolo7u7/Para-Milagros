@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Milagros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Pantalla Inicial -->
+    <div id="initial-screen" class="screen visible">
+        <div class="ambient-particles"></div>
+        <button id="start-btn" class="start-btn">Presiónalo para recibir tu regalo</button>
+    </div>
+
+    <!-- Escena Principal -->
+    <div id="main-scene" class="screen">
+        <div id="particles-container"></div>
+        <div id="petals-container"></div>
+        
+        <div class="content-wrapper">
+            <h1 id="message" class="hidden"></h1>
+            
+            <div id="composition" class="hidden">
+                <div class="bouquet-container">
+                    <img id="bouquet" src="ramo.png" alt="Ramo de flores amarillas">
+                </div>
+            </div>
+            
+            <div id="photos-carousel" class="hidden">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Las fotos se inyectan dinámicamente desde script.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bg-music" src="Mon Laferte - Química Mayor.mp3" loop preload="auto"></audio>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="hidden">
+        <div class="lightbox-content">
+            <span class="lightbox-heart">💛</span>
+            <div class="lightbox-img-wrapper">
+                <img id="lightbox-img" src="" alt="Fotografía ampliada">
+            </div>
+            <span class="lightbox-heart">💛</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+:root {
+    --bg-dark: #0f0a05;
+    --bg-warm: #2a1600;
+    --gold: #d4af37;
+    --gold-light: #fbe58d;
+    --yellow: #ffc107;
+    --text-primary: #fff8e7;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    font-family: 'Playfair Display', serif;
+    overflow: hidden;
+    color: var(--text-primary);
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.5s ease-in-out, visibility 1.5s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 10;
+}
+
+.screen.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+#initial-screen {
+    z-index: 20;
+    background: linear-gradient(-45deg, #0f0a05, #1f1406, #140d06, #0a0603);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+#main-scene {
+    background: linear-gradient(-45deg, var(--bg-dark), var(--bg-warm), #382005, #1c0f00);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    z-index: 10;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Button */
+.start-btn {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold-light);
+    padding: 16px 32px;
+    font-size: 1.2rem;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2), inset 0 0 10px rgba(212, 175, 55, 0.1);
+    transition: all 0.4s ease;
+    animation: pulse-button 3s infinite ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.start-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(251, 229, 141, 0.2), transparent);
+    transition: all 0.6s ease;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.4), inset 0 0 15px rgba(212, 175, 55, 0.2);
+    text-shadow: 0 0 8px var(--gold-light);
+}
+
+.start-btn:hover::before {
+    left: 100%;
+}
+
+@keyframes pulse-button {
+    0% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.2), inset 0 0 10px rgba(212, 175, 55, 0.1); }
+    50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.4), inset 0 0 15px rgba(212, 175, 55, 0.2); }
+    100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.2), inset 0 0 10px rgba(212, 175, 55, 0.1); }
+}
+
+/* Scene Elements */
+.content-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+}
+
+#message {
+    font-family: 'Great Vibes', cursive;
+    font-size: 6.5rem; /* Letras más grandes */
+    color: var(--gold-light);
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 2s ease-in-out, 
+                top 2.5s ease-in-out, 
+                transform 2.5s ease-in-out;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+    z-index: 50; /* Superpone sobre el carrusel */
+}
+
+#message.show {
+    opacity: 1;
+}
+
+.letter {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.9);
+    display: inline-block;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.letter.visible {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+
+.heart-side {
+    opacity: 0;
+    transform: scale(0.5);
+    display: inline-block;
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.heart-side.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#message.move-up {
+    top: 12%; /* Moves up a bit more to make room for composition */
+    transform: translateY(0) translateX(0);
+}
+
+/* Composition (Bouquet) */
+#composition {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 10vh; /* space for text */
+    position: absolute;
+    bottom: 5%;
+    width: 90%;
+    max-width: 1200px;
+    pointer-events: none;
+}
+
+/* Bouquet */
+.bouquet-container {
+    opacity: 0;
+    transform: translateY(150px) scale(0.9);
+    transition: all 4s ease-in-out;
+    z-index: 45; /* Superpone sobre las fotos */
+    flex: 0 0 auto;
+    pointer-events: auto; /* Permite hacer clic aunque #composition tenga none */
+    cursor: pointer;
+}
+
+.bouquet-container.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: gentle-sway 6s ease-in-out infinite 3s; /* Starts swaying after it appears */
+}
+
+#bouquet {
+    max-height: 60vh;
+    max-width: 400px;
+    object-fit: contain;
+    /* Use transparent PNG instead of screen blend mode */
+    filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.5));
+}
+
+@keyframes gentle-sway {
+    0% { transform: rotate(0deg) translateY(0); }
+    25% { transform: rotate(1.5deg) translateY(-5px); }
+    50% { transform: rotate(0deg) translateY(0); }
+    75% { transform: rotate(-1.5deg) translateY(-5px); }
+    100% { transform: rotate(0deg) translateY(0); }
+}
+
+/* Photos Carousel */
+#photos-carousel {
+    position: absolute;
+    top: 45%; /* Centrado entre el mensaje arriba y el ramo abajo */
+    left: 0;
+    width: 100vw;
+    transform: translateY(-40%) scale(0.95); /* Entra ligeramente desde abajo y más pequeño */
+    overflow: hidden;
+    z-index: 25; /* Below text (50) and bouquet (45) */
+    opacity: 0;
+    transition: opacity 3s ease-in-out, transform 3s ease-in-out;
+    pointer-events: none;
+}
+
+#photos-carousel.show {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+.carousel-track {
+    display: flex;
+    gap: 150px; /* Space between photos */
+    width: max-content;
+    animation: scroll-carousel 40s linear infinite;
+    /* Al eliminar el padding-left, el carrusel siempre mostrará imágenes en pantalla de forma continua */
+}
+
+@keyframes scroll-carousel {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-50% - 75px)); } /* Traslada exactamente la mitad del contenido (las primeras 4 fotos) más la mitad del gap para un bucle perfecto */
+}
+
+.photo-container {
+    width: 450px; /* Corazones aún más grandes */
+    height: 450px;
+    position: relative;
+    flex-shrink: 0;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    cursor: pointer;
+    pointer-events: auto; /* Para permitir clics aunque el padre tenga none */
+}
+
+.heart-mask {
+    width: 100%;
+    height: 100%;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M100 190.5l-14.5-13.2C34 130.6 0 100 0 62.2 0 31.4 24.2 7 55 7c17.4 0 34.1 8.1 45 20.9C110.9 15.1 127.6 7 145 7c30.8 0 55 24.4 55 55.2 0 37.8-34 68.4-85.5 115.1L100 190.5z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M100 190.5l-14.5-13.2C34 130.6 0 100 0 62.2 0 31.4 24.2 7 55 7c17.4 0 34.1 8.1 45 20.9C110.9 15.1 127.6 7 145 7c30.8 0 55 24.4 55 55.2 0 37.8-34 68.4-85.5 115.1L100 190.5z' fill='black'/%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    background-color: var(--gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Simulate a soft golden glow/drop-shadow behind the mask using a pseudo element on the container is hard because of mask.
+       We can add a subtle filter. */
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
+}
+
+.heart-mask img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 3s ease;
+}
+
+.photo-container:hover .heart-mask img {
+    transform: scale(1.05);
+}
+
+/* Particles & Petals */
+#particles-container, #petals-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.particle {
+    position: absolute;
+    background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    animation: float-particle linear forwards;
+}
+
+.petal {
+    position: absolute;
+    /* font-size y left manejado por JS */
+    filter: hue-rotate(65deg) brightness(1.5) drop-shadow(0 0 5px rgba(255,215,0,0.5)); /* Convierte la rosa en amarilla */
+    opacity: 0;
+    animation: float-petal linear forwards;
+    user-select: none;
+}
+
+@keyframes float-particle {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    20% { opacity: 0.8; }
+    80% { opacity: 0.5; }
+    100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+}
+
+@keyframes float-petal {
+    0% {
+        transform: translateY(-10vh) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.9;
+        transform: translateY(10vh) rotate(45deg) scale(1);
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(110vh) rotate(720deg) scale(0.8);
+        opacity: 0;
+    }
+}
+
+.confetti-rose {
+    position: absolute;
+    filter: hue-rotate(65deg) brightness(1.5) drop-shadow(0 0 5px rgba(255,215,0,0.5));
+    user-select: none;
+    pointer-events: none;
+    z-index: 150;
+    transform: translate(-50%, -50%); /* Centrar */
+    animation: explode-rose 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes explode-rose {
+    0% {
+        transform: translate(-50%, -50%) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(var(--s)) rotate(var(--r));
+        opacity: 0;
+    }
+}
+
+/* Lightbox */
+#lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(10, 6, 3, 0.9);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    backdrop-filter: blur(5px);
+}
+
+#lightbox.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    transform: scale(0.9);
+    transition: transform 0.4s ease-out;
+}
+
+#lightbox.show .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-heart {
+    font-size: 5rem;
+    animation: gentle-sway 4s ease-in-out infinite;
+}
+
+.lightbox-img-wrapper {
+    position: relative;
+    max-width: 70vw;
+    max-height: 80vh;
+}
+
+#lightbox-img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+    object-fit: contain;
+    border: 3px solid var(--gold);
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    #message {
+        font-size: 3.5rem;
+    }
+    
+    #composition {
+        flex-direction: column;
+        bottom: 2%;
+        margin-top: 15vh;
+        gap: 15px;
+    }
+
+    #message.move-up {
+        top: 10%; 
+    }
+
+    .bouquet-container {
+        order: -1; /* Keep bouquet near the top of the composition on mobile */
+    }
+
+    #bouquet {
+        max-height: 40vh;
+    }
+
+    .photo-container {
+        width: 120px;
+        height: 120px;
+        position: absolute;
+    }
+
+    /* Distribute photos around the bouquet in a responsive way */
+    .photo-container {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .carousel-track {
+        gap: 50px;
+        width: max-content;
+    }
+}
